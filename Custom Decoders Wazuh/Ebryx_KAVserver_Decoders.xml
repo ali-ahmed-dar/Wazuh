@@ -1,0 +1,42 @@
+<!--Custom decoders for Kaspersky AV Server logs-->
+
+<decoder name="kaspersky">
+
+<!--
+2022-10-19T04:20:56.000Z kav-server 1093|1.0.0.0 - KLSRV_HOST_STATUS_CRITICAL [event@23668 p1="Status of device 'DD-SAMREEN' has changed to Critical: Virus scan has not been performed in a long time." et="KLSRV_HOST_STATUS_CRITICAL" etdn="Device status is Critical." hdn="KAV-SERVER" hip="127.0.0.1" gn="Managed devices"] Status of device 'DD-SAMREEN' has changed to Critical: Virus scan has not been performed in a long time.
+-->
+
+<prematch>KLSRV_HOST</prematch>
+
+<regex>(\.+) \.+ p1="(\.+)" et="(\.+)" etdn="(\.+)" hdn="(\.+)" hip="(\.+)" gn="(\.+)"] (\.+)</regex>
+<order>kaspersky_timestamp, kaspersky_p1, kaspersky_eventTitle, kaspersky_eventDesc, kaspersky_hostDesc, kaspersky_hostIP, kaspersky_groupName, kaspersky_msg</order>
+</decoder>
+
+<decoder name="kaspersky">
+
+<!--
+2022-10-19T07:53:54.000Z kav-server 1093|1.0.0.0 - KLSRV_EVENT_HOSTS_CONFLICT [event@23668 p1="office-NEWLAPTOP" p2="WORKGROUP" et="KLSRV_EVENT_HOSTS_CONFLICT" etdn="Conflict of device names." hdn="KAV-SERVER" hip="127.0.0.1" gn="Managed devices"] Multiple devices with name "office-NEWLAPTOP" have been found in Windows domain "WORKGROUP".
+
+2022-10-19T12:30:44.000Z kav-server 1093|1.0.0.0 - KLSRV_EVENT_HOSTS_NEW_DETECTED [event@23668 p1="SES-QURATULAIN" p2="officeHQ" et="KLSRV_EVENT_HOSTS_NEW_DETECTED" etdn="New device has been detected." hdn="KAV-SERVER" hip="127.0.0.1" gn="Managed devices"] New device "SES-QURATULAIN" has been detected (Windows domain "officeHQ").
+
+-->
+
+<prematch>KLSRV_EVENT</prematch>
+
+<regex>(\.+) \.+ p1="(\.+)" p2="(\.+)" et="(\.+)" etdn="(\.+)" hdn="(\.+)" hip="(\.+)" gn="(\.+)"] (\.+)</regex>
+<order>kaspersky_timestamp, kaspersky_p1, kaspersky_p2, kaspersky_eventTitle, kaspersky_eventDesc, kaspersky_hostDesc, kaspersky_hostIP, kaspersky_groupName, kaspersky_msg</order>
+</decoder>
+
+
+<decoder name="kaspersky">
+
+<!--
+2022-10-17T22:05:09.000Z kav-server 1093|1.0.0.0 - KLSRV_UPD_BASES_UPDATED [event@23668 p1="2022-10-17T21:55:00" et="KLSRV_UPD_BASES_UPDATED" etdn="Databases have been updated." hdn="KAV-SERVER" hip="127.0.0.1" gn="Managed devices"] Databases have been updated. Update ID (timestamp 2022-10-17T21:55:00).
+
+-->
+
+<prematch>KLSRV_UPD</prematch>
+
+<regex>(\.+) \.+ p1="(\.+)" et="(\.+)" etdn="(\.+)" hdn="(\.+)" hip="(\.+)" gn="(\.+)"] (\.+)</regex>
+<order>kaspersky_timestamp, kaspersky_p1, kaspersky_eventTitle, kaspersky_eventDesc, kaspersky_hostDesc, kaspersky_hostIP, kaspersky_groupName, kaspersky_msg</order>
+</decoder>

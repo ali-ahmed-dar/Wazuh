@@ -1,0 +1,40 @@
+<!--Custom decoders for Kaspersky KATA logs-->
+
+<decoder name="KATA">
+    <!--
+    CEF:0|AO Kaspersky Lab|Kaspersky Anti Targeted Attack Platform|4.1.0-3484|heartbeat|Heartbeat message|0| dvc=192.168.94.3 deviceExternalId=XDR-CN rt=Oct 24 2022 07:42:04 KasperskyLabKATAcomponent1Name=sandbox_192.168.94.21 KasperskyLabKATAcomponent1State=0 KasperskyLabKATAcomponent2Name=avEngine KasperskyLabKATAcomponent2State=0 KasperskyLabKATAcomponent3Name=ioa KasperskyLabKATAcomponent3State=0 KasperskyLabKATAcomponent4Name=bases_192.168.94.21 KasperskyLabKATAcomponent4State=0 KasperskyLabKATAcomponent5Name=bases_127.0.0.1 KasperskyLabKATAcomponent5State=0 KasperskyLabKATAcomponent6Name=ksn_127.0.0.1 KasperskyLabKATAcomponent6State=0 KasperskyLabKATAcomponent7Name=hdd_127.0.0.1 KasperskyLabKATAcomponent7State=0 KasperskyLabKATAcomponent8Name=cpu_127.0.0.1 KasperskyLabKATAcomponent8State=0 KasperskyLabKATAcomponent9Name=ram_127.0.0.1 KasperskyLabKATAcomponent9State=0
+    -->
+    <prematch>heartbeat</prematch>
+    <regex>(\.+) dvc=(\.+) deviceExternalId=(\.+) rt=(\.+) KasperskyLabKATAcomponent1Name=(\.+) KasperskyLabKATAcomponent1State=(\.+) KasperskyLabKATAcomponent2Name=(\.+) KasperskyLabKATAcomponent2State=(\.+) KasperskyLabKATAcomponent3Name=(\.+) KasperskyLabKATAcomponent3State=(\.+) KasperskyLabKATAcomponent4Name=(\.+) KasperskyLabKATAcomponent4State=(\.+) KasperskyLabKATAcomponent5Name=(\.+)_127.0.0.1 KasperskyLabKATAcomponent5State=(\.+) KasperskyLabKATAcomponent6Name=(\.+)_127.0.0.1 KasperskyLabKATAcomponent6State=(\.+) KasperskyLabKATAcomponent7Name=(\.+)_127.0.0.1 KasperskyLabKATAcomponent7State=(\.+) KasperskyLabKATAcomponent8Name=(\.+)_127.0.0.1 KasperskyLabKATAcomponent8State=(\.+) KasperskyLabKATAcomponent9Name=(\.+)_127.0.0.1 KasperskyLabKATAcomponent9State=(\.+)</regex>
+    <order>kata_srcInfo, kata_dvc, kata_dvcExtId, kata_rt, kata_C1Name, kata_C1State, kata_C2Name, kata_C2State, kata_C3Name, kata_C3State, kata_C4Name, kata_C4State, kata_C5Name, kata_C5State, kata_C6Name, kata_C6State, kata_C7Name, kata_C7State, kata_C8Name, kata_C8State, kata_C9Name, kata_C9State</order>
+</decoder>
+
+
+<decoder name="KATA">
+    <!--
+    CEF:0|AO Kaspersky Lab|Kaspersky Anti Targeted Attack Platform|4.1.0-3484|ids|IDS event detected|High| dvc=192.168.94.8 deviceExternalId=XDR-CN eventId=48 rt=Oct 24 2022 13:38:55 proto=TCP src=192.168.0.68 spt=36693 dst=172.16.0.252 dpt=443 cs1=Generic suspicious network activity cs2Label=HackTool.Nmap.TCP.ServerRequest cs2=41560233 cs3=202210240936
+    -->
+    <prematch>IDS</prematch>
+    <regex>(\.+) dvc=(\.+) deviceExternalId=(\.+) eventId=(\.+) rt=(\w+\s+\d+\s\d+\s\d+:\d+:\d+) proto=(\.+) src=(\.+) spt=(\.+) dst=(\.+) dpt=(\d+) (\.+)</regex>
+    <order>kata_Info, kata_dvc, kata_dvcExtID, kata_eventID, kata_rt, kata_protocol, kata_srcIP, kata_srcPort, kata_dstIP, kata_dstPort, kata_detectionInfo</order>
+</decoder>
+
+
+<decoder name="KATA">
+    <!--
+    CEF:0|AO Kaspersky Lab|Kaspersky Anti Targeted Attack Platform|4.1.0-3484|settings|Settings|Low| dvc=192.168.94.3 eventId=189610134556048612 rt=Oct 24 2022 07:11:35 src=172.16.51.140 suser=admin cs1=configuring the main settings for SIEM system integration cs1label=kata.is.dept deviceExternalId=XDR-CN
+    -->
+    <prematch>Settings</prematch>
+    <regex>(\.+) dvc=(\.+) eventId=(\d+) rt=(\w+\s\d+\s\d+\s\d+:\d+:\d+) src=(\.+) suser=(\w+) (\.+) deviceExternalId=(\.+)</regex>
+    <order>kata_Info, kata_dvc, kata_eventID, kata_rt, kata_src, kata_suser, kata_details, kata_dvcExtId</order>
+</decoder>
+
+
+<decoder name="KATA">
+    <!--
+    CEF:0|AO Kaspersky Lab|Kaspersky Anti Targeted Attack Platform|4.1.0-3484|user_account|Managing user accounts|Low| dvc=192.168.94.8 eventId=4694111441401464357 rt=Oct 24 2022 12:14:25 src=192.168.5.134 suser=SSO cs1=log on deviceExternalId=XDR-CN
+    -->
+    <prematch>Managing user accounts</prematch>
+    <regex>(\.+) dvc=(\.+) eventId=(\d+) rt=(\w+\s\d+\s\d+\s\d+:\d+:\d+) src=(\.+) suser=(\S) (\.+) deviceExternalId=(\.+)</regex>
+    <order>kata_Info, kata_dvc, kata_eventID, kata_rt, kata_src, kata_suser, kata_details, kata_dvcExtId</order>
+</decoder>

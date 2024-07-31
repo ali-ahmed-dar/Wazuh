@@ -1,0 +1,105 @@
+<!--Custom decoders for Ruckus logs-->
+
+<decoder name="RUCKUS">
+    <!--
+    Oct 11 15:32:54 3rd-Floor System: PoE: Power disabled on port 1/1/24 because of detection of non-PD. PD detection will be disabled on port.
+    -->
+    <prematch>^\s\.+disabled</prematch>
+    <regex>(\w+\s\d+\s\.+) (\.+) (\w+): (\.+) on port (\.+) because of (\.+). (\.+).</regex>
+    <order>ruckus_timestamp, ruckus_env, ruckus_category, ruckus_event, ruckus_port_no, ruckus_reason, ruckus_result</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    Oct 11 15:32:53 3rd-Floor System: Interface ethernet 1/1/24, state up 
+    -->
+    <prematch>^\s\.+Interface</prematch>
+    <regex>(\w+\s\d+\s\.+) (\.+) (\w+) (\w+) (\.+), state (\.+)</regex>
+    <order>ruckus_timestamp, ruckus_env, ruckus_source, ruckus_type, ruckus_number, ruckus_state</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    Oct 11 15:32:50 3rd-Floor System: PoE: Allocated power of 15400 mwatts on port 1/1/24.
+    -->
+    <prematch>^\s\.+power of</prematch>
+    <regex>(\w+\s\d+\s\.+) (\.+) (\.+): (\.+) of (\.+) on port (\.+).</regex>
+    <order>ruckus_timestamp, ruckus_env, ruckus_source, ruckus_event, ruckus_power, ruckus_port_no</order>
+</decoder>
+
+<decoder name="RUCKUS">
+    <!--
+    Oct 11 15:31:56 3rd-Floor System: PoE: Port 1/1/5 lost non-PD, so enabling PD detection. 
+    -->
+    <prematch>^\s\.+enabling PD detection</prematch>
+    <regex>(\w+\s\d+\s\.+) (\.+) (\.+): Port (\.+) (\w+\s\w+), so (\.+).</regex>
+    <order>ruckus_timestamp, ruckus_env, ruckus_source, ruckus_port_no, ruckus_event, ruckus_esult</order>
+</decoder>
+
+
+
+<decoder name="RUCKUS">
+    <prematch>^\s\.+STP</prematch>
+    <regex>(\w+\s\d+\s\.+) (\.+) (\w+) (\d+) Port (\.+) STP state -> (\.+)</regex>
+    <order>ruckus_timestamp, ruckus_env, ruckus_type, ruckus_number, ruckus_port_number, ruckus_state</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    2022-10-11T15:39:56.722Z 1st-Floor ICX7150_Switch - System [meta sequenceId=15712] BOMSystem: Interface ethernet 1/1/21, state down
+    -->
+    <prematch>\.+Interface \w+ \.+, state \w+</prematch>
+    <regex>(\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): Interface (\.+), state (\.+)</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_dvc, ruckus_state</order>
+</decoder>
+
+<decoder name="RUCKUS">
+    <!--
+    1 2022-10-11T15:39:56.722Z 1st-Floor ICX7150_Switch - STP [meta sequenceId=15711] BOMSTP: VLAN 80 Port 1/1/21 STP State -> DISABLED (PortDown)
+    -->
+    <prematch>^1\.+STP State</prematch>
+    <regex>1 (\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): VLAN (\.+) port (\.+) STP State \p+ (\.+)</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_vlan, ruckus_port, ruckus_state</order>
+</decoder>
+
+<decoder name="RUCKUS">
+    <!--
+    1 2022-10-14T17:50:07.215Z 1st-Floor ICX7150_Switch - System [meta sequenceId=19628] BOMSystem: PoE: Released complete power of 15400 mwatts on port 1/1/8.
+    -->
+    <prematch>^1\.+PoE: Released</prematch>
+    <regex>1 (\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): (\.+): (\.+\s*\.*\s*\.*) of (\.+\s\.+) on port (\.+).</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_src, ruckus_event, ruckus_power, ruckus_port</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    1 2022-10-14T17:50:01.114Z 1st-Floor ICX7150_Switch - System [meta sequenceId=19627] BOMSystem: PoE: Allocated power of 15400 mwatts on port 1/1/8.
+    -->
+    <prematch>^1\.+PoE: Allocated</prematch>
+    <regex>1 (\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): (\.+): (\.+\s*\.*) of (\.+\s\.+) on port (\.+).</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_src, ruckus_event, ruckus_power, ruckus_port</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    1 2022-10-14T17:50:01.114Z 1st-Floor ICX7150_Switch - System [meta sequenceId=19626] BOMSystem: PoE: Port 1/1/8 lost non-PD, so enabling PD detection.
+    -->
+    <prematch>^1\.+lost non-PD</prematch>
+    <regex>1 (\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): (\.+): Port (\d+/\d+/\d+) (\.+), so (\.+).</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_src, ruckus_port, ruckus_reason, ruckus_action</order>
+</decoder>
+
+
+<decoder name="RUCKUS">
+    <!--
+    1 2022-10-14T17:49:14.115Z 1st-Floor ICX7150_Switch - System [meta sequenceId=19614] BOMSystem: PoE: Power disabled on port 1/1/9 because of detection of non-PD. PD detection will be disabled on port.
+    -->
+    <prematch>^1\.+Power disabled on port</prematch>
+    <regex>1 (\.+) (\.+) (\.+) - (\.+) [(\.+)] (\.+): (\.+): (\.+\s*\.*) on port (\d+/\d+/\d+) because of (\.+). (\.+)</regex>
+    <order>ruckus_Timestamp, ruckus_Env, ruckus_System, ruckus_Category, ruckus_ID, ruckus_Type, ruckus_src, ruckus_event, ruckus_port, ruckus_reason, ruckus_action</order>
+</decoder>

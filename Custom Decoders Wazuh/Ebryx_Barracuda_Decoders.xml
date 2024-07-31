@@ -1,0 +1,234 @@
+<!--Custom decoders for Barracuda logs-->
+
+  <!--
+GENERIC LOG FORMAT FOR EMAIL BARRACUDA
+TIMESTAMP, HOST, PROCESS, MSG_ID, START, END, SERVICE, INFO
+  -->
+
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665250462-13c5191869fbbf0001-HBqtIi 0 0 SEND ENC 1 8F203960D85 250 2.0.0 OK  1665250468 189-20020a6309c6000000b00460bd9a64c1si1606072pgj.637 - gsmtp #to#gmail-smtp-in.l.google.com[74.125.24.26]:25
+    outbound/smtp: 127.0.0.1 1665575171-13c5191869146050005-p9M2Dp 0 0 SEND ENC 1 1F871960DCF 250 2.0.0 OK 1665575222 fc20-20020a05600c525400b003a53bec9f78si997941wmb.92 - gsmtp #to#gmail-smtp-in.l.google.com[142.251.5.26]:25
+    -->
+    <prematch>(250\s2.0.0\sOK\s)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) (\.+\s+\.+\s*\.*) (\.+) (\.+) - (\.+)</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_status, barracuda_sender, barracuda_recepient, barracuda_mail_server</order>
+</decoder>
+
+<decoder name="Barracuda">
+
+    <!--
+    scan: UNKNOWN[192.168.0.219] 1665250462-13c5191869fbbf0001-HBqtIi 1665250462 1665250463 SCAN ENC usersomeone@email.com usersomeone@gmail.com 0.001 0 0 - SZ:6061 SUBJ:=?UTF-8?Q?Application=20Submission=20Notification?=
+    scan: domain.com.xy[00.000.000.00] 1666031376-13c519186818aa10001-KGyeZn 1666031377 1666031380 SCAN ENC usersomeone@gmail.com usersomeone@email.com 2.295 0 0 - SZ:4009 SUBJ:
+    -->
+
+    <prematch>(scan:)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\.+) (\.+) (\.+) (\.+) (\.+) (\.+) SZ:(\.+) SUBJ:(\.*)</regex>
+    <order>process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_sender, barracuda_recepient, barracuda_score, barracuda_action, barracuda_reason, barracuda_tls, barracuda_SZ, barracuda_SUBJ</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665247448-13c5191869fafd0002-GK7XaS 0 0 SEND ENC 1 C0A68960D88 250 ok:  Message 107638258 accepted #to#a0310peesa01.domain.com.xy[00.000.000.00]:00
+    outbound/smtp: 127.0.0.1 1665250448-13c5191868fbbe0002-THWBhm 0 0 SEND ENC 1 8EACA960D87 250 ok:  Message 147143877 accepted #to#mx02.domain.com.xy[00.000.000.00]:00
+    -->
+    <prematch>(Message\s+\d+\s+accepted)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) (\.+): \s*Message (\d+) accepted #to#(\.+)</regex>
+    <order>process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_status, barracuda_msg_ID, barracuda_mail_server</order>
+</decoder>
+
+
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665247448-13c5191869fafd0004-2ThY0J 0 0 SEND ENC 1 6A458960D8C 250 Ok: queued as 1350E480051 #to#bsg01.zong.com.pk[209.150.154.3]:25
+    outbound/smtp: 127.0.0.1 1665247707-13c5191868fb0d0001-e71QO5 0 0 SEND ENC 1 2448E960D85 250 2.0.0 Ok: queued as F33AF5B00140 #to#mx01.mail.icloud.com[17.57.155.24]:25
+    -->
+    <prematch>(:\squeued\sas)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+)\s(\.+): queued as (\.+) #to#(\.+)</regex>
+    <order>barracuda_process, barracuda_ip, barracuda_pid, barracuda_start, end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_status, barracuda_queueid, barracuda_mail-server</order>
+</decoder>
+
+
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665248907-13c5191869fb660002-EbFBds 0 0 SEND - 1 AADA7960D87 250 Message accepted for delivery #to#192.168.0.219[192.168.0.219]:25
+    -->
+    <prematch>(Message\s+accepted\s+for\s+delivery)</prematch>
+    <regex>\s*(\.+): (\d+\p\d+\p\d+\p\d+) (\.+) (\.+) (\.+) (\w+) (\.+) (\.+) (\.+) (\.+) Message accepted for delivery #to#(\.+)</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_msg_id, barracuda_status, barracuda_mail-server</order>
+</decoder>
+
+
+
+
+<decoder name="Barracuda">
+
+    <!--
+    inbound/pass1: 000.00.000.140.domain.com.xy[00.000.000.00] 1665247684-13c5191869fb0c0001-O0D1c6 1665247684 1665247692 SCAN - userida@mail.com usersomeone@email.com - 2 74 domain-com.com SZ:24677 SUBJ:=?UTF-8?B?44CQ57eK5oCl44Gu6YCj57WhIOOAkeOCpOOCquODs+OCq+ODvOODiSDjgZTliKnnlKjnorroqo3jga7jgYrpoZjjgYQ=?=
+    -->
+    <prematch>(inbound/pass1:\.+SCAN)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\.+) (\.+) (\.+) (\.+) (\.+) (\.+) SZ:(\.+) SUBJ:(\.+)</regex>
+    <order>barracuda_process, barracuda_host, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_sender, barracuda_recepient, barracuda_score, barracuda_action, barracuda_reason, barracuda_extra, barracuda_SZ, barracuda_SUBJ</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+    <!--
+    inbound/pass1: unknown[103.151.125.9] 1665250316-1295641-6248-64436-1 1665250317 1665250318 RECV - - 2 83 - [-]
+    -->
+    <prematch>(inbound/pass1:\.+RECV)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\.+) (\.+) (\.+) (\.+)</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_sender, barracuda_recepient, barracuda_score, barracuda_action, barracuda_IP</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665247448-13c5191869fafd0003-uMUvFg 0 0 SEND ENC 1 1F5DE960D87 250 ok dirdel #to#mta5.am0.yahoodns.net[98.136.96.91]:25
+    -->
+    <prematch>(dirdel)</prematch>
+    <regex>(\.+): (\d+\p\d+\p\d+\p\d+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) (\.+) (\.*) (\.+) #to#(\.+)</regex>
+    <order>barracuda_process, barracuda_ip, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, enc, barracuda_resp, barracuda_ID, barracuda_code, barracuda_status, barracuda_action, barracuda_to</order>
+</decoder>
+
+<decoder name="Barracuda">
+
+    <!--
+    outbound/smtp: 127.0.0.1 1665248545-13c5191868fb470001-JIeavb 0 0 SEND - 2 649E5960D85 Host or domain name not found. Name service error for name=dirbs.pk type=A: Host not found #to#none
+    -->
+    <prematch>(Host\snot\sfound)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) Host or domain name not found. Name service error for name=(\.+) type=(\.+): Host not found #to#none</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_name, barracuda_Type</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+    <prematch>(Queued\smail\sfor\sdelivery)</prematch>
+    <regex>(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) (\.+) (\.+) (\.+) [InternalId=(\.+), Hostname=(\.+)] (\.+) bytes in (\.+), (\.+) KB/sec Queued mail for delivery -> (\.+) (\.+) #to#(\.+)</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_act1, barracuda_reason1, barracuda_sender, barracuda_internalID, barracuda_hostname, barracuda_bytes, barracuda_time_taken, barracuda_speed, barracuda_act2, barracuda_reason2, barracuda_mail_server</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: [192.168.5.150] LOGOUT (admin)
+-->
+    <prematch>(web:\.+[\.+]\s\w+\(\))</prematch>
+    <regex>\s*(\.+): [(\.+)] (\w+) (\.+)</regex>
+    <order>barracuda_process, barracuda_ip, barracuda_action, barracuda_data</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+<!--
+outbound/smtp: 127.0.0.1 1665575139-13c5191868146030001-zBqAH8 0 0 SEND ENC 1 48E3C960D7B 250 2.0.0 iaBkoHOdPcuqI - iaBkoHOdPcuqIiaBuoj3tq mail accepted for delivery #to#mailstore1.secureserver.net[68.178.213.243]:25
+-->
+    <prematch>(mail\s+accepted)</prematch>
+    <regex>\s*(\.+): (\d+\p\d+\p\d+\p\d+) (\.+) (\.+) (\.+) (\w+) (\.+) (\d+) (\.+) (\.+\s*\.*) (\.+) (\.+) (\.+) mail accepted for delivery #to#(\.+)</regex>
+    <order>barracuda_process, barracuda_ip, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_status, barracuda_sender, barracuda_recp, barracuda_msg_ID, barracuda_mail_server</order>
+</decoder>
+
+
+
+
+<decoder name="Barracuda">
+
+<!--
+outbound/smtp: 127.0.0.1 1665574886-13c5191868145fa0001-KBJQxZ 0 0 SEND ENC 2 7999D960DAB host domain.com.xy[00.000.000.00] said: 550 #5.1.0 Address rejected. (in reply to RCPT TO command) #to#a0310peesa01.domain.com.xy[00.000.000.00]:00
+-->
+    <prematch>(said:)</prematch>
+    <regex>\s*(\.+): (\.+) (\.+) (\d+) (\d+) (\w+) (\.+) (\d+) (\.+) host (\.+) said: (\.+)</regex>
+    <order>barracuda_process, barracuda_src, barracuda_pid, barracuda_start, barracuda_end, barracuda_service, barracuda_enc, barracuda_resp, barracuda_ID, barracuda_hostname, barracuda_message</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: NOTIFICATION (usersomeone@email.com) queued as 45DE116C0043
+-->
+    <prematch>(Notification\.+queued)</prematch>
+    <regex>\s*(\.+): (\.+) \((\.+)\) (\.+) as (\.+)</regex>
+    <order>barracuda_process, barracuda_type, barracuda_user, barracuda_action, barracuda_ID</order>
+</decoder>
+
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: NOTIFICATION stop (Daily 24 sent, 0 unchanged, 0 already notified ... Weekly 0 sent, 0 unchanged, 0 already notified)
+-->
+    <prematch>(Notification stop)</prematch>
+    <regex>\s*(\.+): (\.+) (\.+) (\.+)</regex>
+    <order>barracuda_process, barracuda_type, barracuda_action, barracuda_data</order>
+</decoder>
+
+
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: Ret Policy Summary (Del:0 Kept:0)
+-->
+    <prematch>(Ret policy summary)</prematch>
+    <regex>\s*(\.+): (\w+\s\w+\s\w+) \(Del:(\d+) Kept:(\d+)\)</regex>
+    <order>barracuda_process, barracuda_event, barracuda_deleted, barracuda_kept</order>
+</decoder>
+
+<decoder name="Barracuda">
+
+<!--
+ web: Ret Policy (Del:1 Kept:6 from usersomeone@email.com)
+-->
+    <prematch>(Ret policy \()</prematch>
+    <regex>\s*(\.+): (\.+) \(Del:(\d+) Kept:(\d+) from (\.+)\)</regex>
+    <order>barracuda_process, barracuda_item, barracuda_delete, barracuda_keep, barracuda_user</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: Ret Policy DELETE (1663290763-13c51916b7858e0001-vgRS6y)
+-->
+    <prematch>Ret policy DELETE</prematch>
+    <regex>\s*(\.+): (\.+) \((\.+)\)</regex>
+    <order>barracuda_process, barracuda_event, barracuda_item</order>
+</decoder>
+
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: Retention violating accounts: 26 total
+-->
+    <prematch>Retention violating accounts</prematch>
+    <regex>\s*(\.+): (\.+): (\d+)</regex>
+    <order>barracuda_process, barracuda_item, barracuda_dvc_count</order>
+</decoder>
+
+
+<decoder name="Barracuda">
+
+<!--
+ web: [192.168.5.134] VIEW MESSAGE LOG DETAIL - MESSAGE ID: 1665687604:10355 [admin]
+-->
+    <prematch>VIEW MESSAGE LOG DETAIL</prematch>
+    <regex>\s*(\.+): [(\.+)] (\.+) - MESSAGE ID: (\.+) [\.+]</regex>
+    <order>barracuda_process, barracuda_ip, barracuda_event, barracuda_Msg_ID, barracuda_user</order>
+</decoder>

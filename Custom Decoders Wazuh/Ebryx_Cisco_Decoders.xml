@@ -1,0 +1,54 @@
+<!--Custom decoders for Cisco logs-->
+
+<!--
+2022 Oct 14 10:56:46 UTC: %ETHPORT-5-IF_RX_FLOW_CONTROL: Interface Ethernet1/15, operational Receive Flow Control state changed to off
+2022 Oct 14 10:56:46 UTC: %ETHPORT-5-IF_DUPLEX: Interface Ethernet1/15, operational duplex mode changed to Full
+2022 Oct 14 10:56:46 UTC: %ETHPORT-5-IF_TX_FLOW_CONTROL: Interface Ethernet1/15, operational Transmit Flow Control state changed to off
+2022 Oct 14 10:56:46 UTC: %ETHPORT-5-SPEED: Interface Ethernet1/15, operational speed changed to 10 Gbps
+2022 Oct 14 10:56:46 UTC: %ETHPORT-5-IF_UP: Interface Ethernet1/15 is up in mode access
+-->
+
+
+<!--state changed-->
+<decoder name="Cisco">
+    <prematch>(FLOW_CONTROL)</prematch>
+    <regex>(\.+) UTC: %(\.+): (\.+), (\w+) (\w+\s\w+\s\w+) (\.+)</regex>
+    <order>cisco_timestamp, cisco_src, cisco_dvc, cisco_status, cisco_type, cisco_event</order>
+</decoder>
+
+<!--Duplex mode-->
+<decoder name="Cisco">
+    <prematch>(IF_DUPLEX)</prematch>
+    <regex>(\.+) UTC: %(\.+): (\.+), (\w+) (\.+)</regex>
+    <order>cisco_timestamp, cisco_src, cisco_dvc, cisco_status, cisco_event</order>
+</decoder>
+
+<!--Speed-->
+<decoder name="Cisco">
+    <prematch>(-Speed)</prematch>
+    <regex>(\.+) UTC: %(\.+): (\.+), (\w+) speed changed to (\.+)</regex>
+    <order>cisco_timestamp, cisco_src, cisco_dvc, cisco_status, cisco_speed</order>
+</decoder>
+
+<!--IF UP-->
+<decoder name="Cisco">
+    <prematch>(IF_UP)</prematch>
+    <regex>(\.+) UTC: %(\.+): (\.+) is (\w+) in mode (\.+)</regex>
+    <order>cisco_timestamp, cisco_src, cisco_dvc, cisco_state, cisco_mode</order>
+</decoder>
+
+
+
+<decoder name= "Cisco">
+
+<!--
+name="C11 - Interface Updown"
+
+Oct 18 07:00:57.637: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/44, changed state to down
+Oct 18 02:06:07.254: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/26, changed state to down
+-->
+
+    <prematch>(UPDOWN)</prematch>
+    <regex>(\.+): %(\.+):\.* Interface (\.+), (\.+)</regex>
+    <order>cisco_timestamp, cisco_type, cisco_interface, cisco_desc</order>
+</decoder>
